@@ -1,15 +1,20 @@
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class DataManager : MonoBehaviour
 {
+
+    //Questions Refered Variables
+    [SerializeField]
+    public List<Question> Questions;
     //Singleton
     public static DataManager Instance;
     //Tracking Data
     public int score;
-    private int actualQuestionCount;
+    private int questionIndex;
     public int questionsCount;
     public int timeLeft;
     [SerializeField]
@@ -31,11 +36,16 @@ public class DataManager : MonoBehaviour
         }
         
     }
+    public void Start()
+    {
+        StartQuestions();
+    }
 
     public void StartQuestions(){
         score = 0;
-        actualQuestionCount = 1;
-        questionsCount = QuestionaryManager.Instance.Questions.Count;
+        questionIndex = 0;
+        questionsCount = Questions.Count;
+        QuestionaryManager.Instance.NextQuestion(Questions[questionIndex]);
     }
     public void StartTimer(){
         timeLeft = MaxTimeAnswer;
@@ -50,13 +60,18 @@ public class DataManager : MonoBehaviour
     }
     public void SubmitAnswer(bool isCorrect)
     {
-        
-        actualQuestionCount = actualQuestionCount == questionsCount ? actualQuestionCount : ++actualQuestionCount;
+        questionIndex++;
         if(isCorrect){
             score += 200*timeLeft/MaxTimeAnswer ;
         }
         StopAllCoroutines();
-        QuestionaryManager.Instance.NextQuestion();
+        if(questionIndex == questionsCount){
+            QuestionaryManager.Instance.NextQuestion(null);
+            Debug.Log("End Game");
+            return;
+        }else{
+            QuestionaryManager.Instance.NextQuestion(Questions[questionIndex]);
+        }
     }
 
     // Update is called once per frame
@@ -64,6 +79,6 @@ public class DataManager : MonoBehaviour
     {
         TimerUI.text = timeLeft.ToString();
         ScoreUI.text = "Score: "+ score.ToString() ;
-        QuestionCountUI.text = actualQuestionCount + "/" + questionsCount;
+        QuestionCountUI.text =( questionIndex+1) + "/" + questionsCount;
     }
 }

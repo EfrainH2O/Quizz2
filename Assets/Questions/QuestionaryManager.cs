@@ -7,11 +7,7 @@ using System.Collections;
 public class QuestionaryManager : MonoBehaviour
 {
     //Question Refered Variables
-    [SerializeField]
-    public List<Question> Questions;
-    private Queue<Question> QuestionsQueue;
     private Question ActualQuestion;
-
     //Speed Variables
     [SerializeField]
     private float textSpeed;
@@ -34,61 +30,47 @@ public class QuestionaryManager : MonoBehaviour
         }else{
             Destroy(gameObject);
         }
-        QuestionsQueue = new Queue<Question>(Questions);
         optionsAreas = new List<GameObject>();
         foreach (Transform child in transform.GetChild(1)){
             optionsAreas.Add(child.gameObject);
         }
+        
+        textSpeed = 1/ textSpeed;
+        optionSpeed = 1/ optionSpeed;
     }
     void Start()
     {
-        textSpeed = 1/ textSpeed;
-        optionSpeed = 1/ optionSpeed;
         score = 0;
-        StartQuestions();
     }
 
-
-    void StartQuestions()
-    {
-        DataManager.Instance.StartQuestions();
-        StopAllCoroutines();
-        ActualQuestion = QuestionsQueue.Dequeue();
-        StartCoroutine(ShowQuestion(ActualQuestion ));
-    }
-    
-    public void NextQuestion()
-    {
-        if(QuestionsQueue.Count > 0){
-            ActualQuestion = QuestionsQueue.Dequeue();
-            StartCoroutine(ShowQuestion(ActualQuestion));
-        }else{
-            questionArea.gameObject.SetActive(false);
-            foreach (GameObject option in optionsAreas)
-            {
-                option.SetActive(false);
-            }
-        }
-    }
-
-    IEnumerator ShowQuestion(Question item)
+    public void NextQuestion(Question item)
     {
         foreach (GameObject option in optionsAreas)
         {
             option.SetActive(false);
         }
+        ActualQuestion = item;
+        if(ActualQuestion != null){
+            StartCoroutine(ShowQuestion(ActualQuestion));
+        }else{
+            questionArea.gameObject.SetActive(false);
+        }
+    }
+
+    IEnumerator ShowQuestion(Question item)
+    {
+       
         questionArea.gameObject.SetActive(true);
         questionArea.GetComponent<TextMeshProUGUI>().text = "";
         foreach (char letter in item.QuestionText.ToCharArray())
         {
+             Debug.Log("Showing Question");
+             Debug.Log(textSpeed);
             questionArea.GetComponent<TextMeshProUGUI>().text += letter;
             yield return new WaitForSeconds(textSpeed);
         }
         item.Options.Shuffle();
-        
-        DataManager.Instance.StartTimer();
         for(int i = 0; i < 4;i++){
-            
             yield return new WaitForSeconds(optionSpeed);
             if(i < item.Options.Count){
                 optionsAreas[i].SetActive(true);
@@ -98,6 +80,7 @@ public class QuestionaryManager : MonoBehaviour
             optionsAreas[i].GetComponentInChildren<TextMeshProUGUI>().text = item.Options[i].OptionText;
             optionsAreas[i].GetComponent<ButtonAsign>().IsCorrect = item.Options[i].IsCorrect;
         }
+        DataManager.Instance.StartTimer();
     }
 
 }
