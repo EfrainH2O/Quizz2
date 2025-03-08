@@ -6,7 +6,8 @@
 Shader "TextMeshPro/Mobile/Distance Field" {
 
 Properties {
-	_FaceColor          ("Face Color", Color) = (1,1,1,1)
+	
+	_FaceColor          ("Face Color", Color) = (0.5, 0.7, 1, 1)
 	_FaceDilate			("Face Dilate", Range(-1,1)) = 0
 
 	_OutlineColor	    ("Outline Color", Color) = (0,0,0,1)
