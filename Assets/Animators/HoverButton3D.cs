@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using System.Collections;
 
 public class FloatingButton3D : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
@@ -36,7 +37,7 @@ public class FloatingButton3D : MonoBehaviour, IPointerEnterHandler, IPointerExi
         StartCoroutine(ScaleObject(originalScale));
     }
 
-    private System.Collections.IEnumerator ScaleObject(Vector3 targetScale)
+    private IEnumerator ScaleObject(Vector3 targetScale)
     {
         while (Vector3.Distance(transform.localScale, targetScale) > 0.01f)
         {
