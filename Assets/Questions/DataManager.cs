@@ -13,12 +13,14 @@ public class DataManager : MonoBehaviour
     //Singleton
     public static DataManager Instance;
     //Tracking Data
+    private bool inQuestions;
     public int score;
     private int questionIndex;
     public int questionsCount;
     public int timeLeft;
     [SerializeField]
     private int MaxTimeAnswer;
+    //UI to FIll
 
     [SerializeField]
     private TextMeshProUGUI TimerUI;
@@ -26,6 +28,10 @@ public class DataManager : MonoBehaviour
     private TextMeshProUGUI ScoreUI;
     [SerializeField]
     private TextMeshProUGUI QuestionCountUI;
+    [SerializeField]
+    private GameObject FinalMessage;
+    //Objects to interact
+    private ObjectManager objectM;
 
     void Awake()
     {
@@ -34,18 +40,23 @@ public class DataManager : MonoBehaviour
         }else{
             Destroy(gameObject);
         }
+        objectM = GetComponent<ObjectManager>();
         
     }
     public void Start()
     {
+        FinalMessage.SetActive(false);
         StartQuestions();
+        
     }
 
     public void StartQuestions(){
+        inQuestions = true;
         score = 0;
         questionIndex = 0;
         questionsCount = Questions.Count;
         QuestionaryManager.Instance.NextQuestion(Questions[questionIndex]);
+        objectM.StartReparation();
     }
     public void StartTimer(){
         timeLeft = MaxTimeAnswer;
@@ -60,25 +71,37 @@ public class DataManager : MonoBehaviour
     }
     public void SubmitAnswer(bool isCorrect)
     {
-        questionIndex++;
+        questionIndex = questionIndex == questionsCount? questionIndex : questionIndex +1;
         if(isCorrect){
             score += 200*timeLeft/MaxTimeAnswer ;
         }
         StopAllCoroutines();
         if(questionIndex == questionsCount){
             QuestionaryManager.Instance.NextQuestion(null);
+            inQuestions = false;
             Debug.Log("End Game");
             return;
         }else{
             QuestionaryManager.Instance.NextQuestion(Questions[questionIndex]);
+            objectM.RepairResult(isCorrect);
         }
     }
 
     // Update is called once per frame
     void Update()
     {
-        TimerUI.text = timeLeft.ToString();
-        ScoreUI.text = "Score: "+ score.ToString() ;
-        QuestionCountUI.text =( questionIndex+1) + "/" + questionsCount;
+        if(inQuestions){
+            TimerUI.text = timeLeft.ToString();
+            ScoreUI.text = "Score: "+ score.ToString() ;
+            QuestionCountUI.text =( questionIndex+1) + "/" + questionsCount;
+        }else{
+            TimerUI.gameObject.SetActive(false);
+            ScoreUI.gameObject.SetActive(false);
+            QuestionCountUI.gameObject.SetActive(false);
+            FinalMessage.SetActive(true);
+            FinalMessage.GetComponent<TextMeshProUGUI>().text = "Puntaje: "+score.ToString();
+            gameObject.SetActive(false);
+        }
+        
     }
 }

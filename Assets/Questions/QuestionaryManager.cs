@@ -69,13 +69,14 @@ public class QuestionaryManager : MonoBehaviour
             questionArea.GetComponent<TextMeshProUGUI>().text += letter;
             yield return new WaitForSeconds(textSpeed);
         }
+        yield return new WaitForSeconds(0.5f);
         item.Options.Shuffle();
         for(int i = 0; i < 4;i++){
             yield return new WaitForSeconds(optionSpeed);
             if(i < item.Options.Count){
                 optionsAreas[i].SetActive(true);
             }else{
-                continue;
+                break;
             }
             optionsAreas[i].GetComponentInChildren<TextMeshProUGUI>().text = item.Options[i].OptionText;
             optionsAreas[i].GetComponent<ButtonAsign>().IsCorrect = item.Options[i].IsCorrect;

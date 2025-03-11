@@ -54,8 +54,9 @@ public class StartGamplay : MonoBehaviour
         
         foreach(AsyncOperation operation in loadingProcess){
             operation.allowSceneActivation = true;
+            yield return null;
         }
-        yield return null;
+        
         SceneManager.SetActiveScene(SceneManager.GetSceneByName(scenetoLoad[0]));
         SceneManager.UnloadSceneAsync(loadingScene);
         Destroy(gameObject);
