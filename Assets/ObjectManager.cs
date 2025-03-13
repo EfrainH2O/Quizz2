@@ -13,6 +13,10 @@ public class ObjectManager : MonoBehaviour
     public float cloneScaleFactor = 0.6f; // factor de escala 
     public float moveDuration = 0.5f; // para que se muevan suavemente
     public float startHeightOffset = -2f; // Altura de bajada
+    public ParticleSystem correctParticle;
+    public ParticleSystem wrongParticle;
+
+    
 
     private void Start()
     {
@@ -34,16 +38,25 @@ public class ObjectManager : MonoBehaviour
         if (result)
         {
             electrodomesticos[actualItem].MoveUp(); // Subir el objeto original a su posición inicial
+            correctParticle.Stop();
+            Debug.Log(correctParticle.isPlaying);
+
+            correctParticle.Play();
+        
         }
         else
         {
             // Efecto de daño (Aquí puedes agregar algún efecto visual o de sonido)
+            wrongParticle.Stop();
+            Debug.Log(wrongParticle.isPlaying);
+            wrongParticle.Play();
         }
 
         // Destruir copia (clon) al contestar la pregunta
         if (tempClone != null)
         {
             Destroy(tempClone);
+            
         }
 
         // Siguiente objeto

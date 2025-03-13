@@ -38,4 +38,5 @@ public class Reparable : MonoBehaviour
     {
         StartCoroutine(MoveObject(-lastMoveOffset)); // Sube la misma cantidad que bajó
     }
+    
 }
