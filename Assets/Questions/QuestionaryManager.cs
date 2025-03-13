@@ -83,8 +83,19 @@ public class QuestionaryManager : MonoBehaviour
         }
         DataManager.Instance.StartTimer();
     }
+    public void ResetData()
+    {
+        StopAllCoroutines();
+        questionArea.GetComponent<TextMeshProUGUI>().text = "";
+        foreach(GameObject g in optionsAreas){
+            g.SetActive(false);
+        }
+    }
 
 }
+
+    
+
  [System.Serializable]
 public class Question{
    [SerializeField]

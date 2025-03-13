@@ -76,15 +76,20 @@ public class DataManager : MonoBehaviour
             score += 200*timeLeft/MaxTimeAnswer ;
         }
         StopAllCoroutines();
+        QuestionaryManager.Instance.ResetData();
+        objectM.RepairResult(isCorrect);
         if(questionIndex == questionsCount){
             QuestionaryManager.Instance.NextQuestion(null);
-            inQuestions = false;
+            StartCoroutine(FinalCountDown());
             Debug.Log("End Game");
             return;
         }else{
             QuestionaryManager.Instance.NextQuestion(Questions[questionIndex]);
-            objectM.RepairResult(isCorrect);
         }
+    }
+    private IEnumerator FinalCountDown(){
+        yield return new WaitForSeconds(3f);
+        inQuestions = false;
     }
 
     // Update is called once per frame
