@@ -3,40 +3,33 @@ using UnityEngine;
 
 public class Reparable : MonoBehaviour
 {
-    private Vector3 originalPosition;
-    private float lastMoveOffset; // Guarda cuánto bajó el objeto
+    private Vector3 spawn;
 
-    private void Start()
+    public float ObVel;
+
+
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Awake()
     {
-        originalPosition = transform.position; // Guarda la posición inicial
+        spawn = transform.position;
     }
 
-    private IEnumerator MoveObject(float offset)
-    {
-        Vector3 startPos = transform.position;
-        Vector3 targetPos = new Vector3(startPos.x, startPos.y + offset, startPos.z);
-        float elapsedTime = 0;
-        float moveDuration = 0.5f;
+    public void ReturnToPlace(){
+        StartCoroutine(MoveObject());
+    }
 
-        while (elapsedTime < moveDuration)
+    private IEnumerator MoveObject()
+    {
+        while (transform.position.y != spawn.y)
         {
-            transform.position = Vector3.Lerp(startPos, targetPos, elapsedTime / moveDuration);
-            elapsedTime += Time.deltaTime;
+            transform.transform.position = Vector3.MoveTowards(transform.position, spawn, ObVel*Time.deltaTime);
             yield return null;
         }
-
-        transform.position = targetPos;
-    }
-
-    public void MoveDown()
-    {
-        lastMoveOffset = -7f; // Baja 5 unidades (o el valor que desees)
-        StartCoroutine(MoveObject(lastMoveOffset));
-    }
-
-    public void MoveUp()
-    {
-        StartCoroutine(MoveObject(-lastMoveOffset)); // Sube la misma cantidad que bajó
+        //Aqui pones que se efectue un efecto en esta posicion de sonido y visual
     }
     
+    public IEnumerator Show(){
+        yield return new WaitForSeconds (0.3f);
+    }
+
 }

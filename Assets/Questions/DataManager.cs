@@ -97,7 +97,7 @@ public class DataManager : MonoBehaviour
     {
         if(inQuestions){
             TimerUI.text = timeLeft.ToString();
-            ScoreUI.text = "Score: "+ score.ToString() ;
+            ScoreUI.text = "Puntaje: "+ score.ToString() ;
             QuestionCountUI.text =( questionIndex+1) + "/" + questionsCount;
         }else{
             TimerUI.gameObject.SetActive(false);

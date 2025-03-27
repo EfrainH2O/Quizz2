@@ -64,8 +64,6 @@ public class QuestionaryManager : MonoBehaviour
         questionArea.GetComponent<TextMeshProUGUI>().text = "";
         foreach (char letter in item.QuestionText.ToCharArray())
         {
-             Debug.Log("Showing Question");
-             Debug.Log(textSpeed);
             questionArea.GetComponent<TextMeshProUGUI>().text += letter;
             yield return new WaitForSeconds(textSpeed);
         }
