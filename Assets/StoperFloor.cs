@@ -6,5 +6,6 @@ public class StoperFloor : MonoBehaviour
     void OnCollisionEnter(Collision collision)
     {
         collision.gameObject.GetComponent<CloneChar>()?.Stop();
+        //Poner el efecto visual en el punto de contacto
     }
 }

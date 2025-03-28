@@ -13,11 +13,11 @@ public class ObjectManager : MonoBehaviour
     private GameObject tempClone;
     [SerializeField]
     private Transform clonePosition; 
+    [SerializeField ]
+    private PhysicsMaterial NoBouncy;
     public float cloneScaleFactor = 0.6f; // factor de escala 
     public ParticleSystem correctParticle;
     public ParticleSystem wrongParticle;
-
-    
 
     private void Start()
     {
@@ -41,19 +41,15 @@ public class ObjectManager : MonoBehaviour
 
     public void RepairResult(bool result)
     {
-        Destroy(tempClone);
+        tempClone.GetComponent<CloneChar>().FinalAction(result);
         if (result)
         {
-            correctParticle.Stop();
-            Debug.Log(correctParticle.isPlaying);
             correctParticle.Play();
             electrodomesticos[actualItem].gameObject.SetActive(true);
             electrodomesticos[actualItem].ReturnToPlace();
         }
         else
         {
-            // Efecto de daño (Aquí puedes agregar algún efecto visual o de sonido)
-            wrongParticle.Stop();
             Debug.Log(wrongParticle.isPlaying);
             wrongParticle.Play();
         }
@@ -67,7 +63,7 @@ public class ObjectManager : MonoBehaviour
 
     private IEnumerator ShowItem()
     {
-        yield return new WaitForSeconds(0);
+        yield return new WaitForSeconds(0.2f);
 
         if (actualItem < electrodomesticos.Count)
         {
@@ -90,8 +86,9 @@ public class ObjectManager : MonoBehaviour
             tempClone.transform.Rotate(0,20f,5f);
             Rigidbody rg = tempClone.AddComponent<Rigidbody>();
             rg.useGravity = true;
-            rg.mass = 5f;
+            rg.mass = 10f;
             tempClone.AddComponent<CloneChar>();
+            tempClone.GetComponent<CloneChar>().NBouncy = NoBouncy;
             Destroy(tempClone.GetComponent<Reparable>());
         }
     }

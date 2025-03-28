@@ -380,6 +380,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ObVel: 40
   clonePosition: {fileID: 1155138757}
+  NoBouncy: {fileID: 13400000, guid: a9ef3fb57841345459dc9f2bba352a0f, type: 2}
   cloneScaleFactor: 0.6
   correctParticle: {fileID: 243263352}
   wrongParticle: {fileID: 4509786209378129311}
