@@ -1,68 +1,52 @@
 using System.Collections;
+using System.Data;
+using Unity.Mathematics;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class CloneChar : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    private Rigidbody rg;
-    private Collider bx;
-    public PhysicsMaterial NBouncy;
 
-    bool Ofirst;
-    void Awake()
-    {
-        Ofirst = true;
-        rg = GetComponent<Rigidbody>();
-        bx = GetComponent<Collider>();
+    private  float vel;    public Vector3 MaxScale;
+    private float MaxTime = 120f;
 
-
-    }
 
     void Start()
-    {
+    {    
+        StartCoroutine(Hello());
         
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-    public void Stop(){
-        if(Ofirst){
-            rg.useGravity = false;
-            rg.linearDamping = 0.8f;
-            rg.angularDamping = 0.7f;
-            Ofirst = false;
+
+    private IEnumerator Hello(){
+        vel = (MaxScale.magnitude - transform.localScale.magnitude)/MaxTime;
+        while(transform.localScale.x  < MaxScale.x &&
+                 transform.localScale.y < MaxScale.y && 
+                    transform.localScale.z < MaxScale.z  ){
+            transform.localScale += Vector3.one*vel;
+            yield return null;
         }
-        
     }
+
+    
+  
 
     public void FinalAction(bool result){
         
         if(result){
             //Efectos Sonoros
             //Efecto visual de estela
-            rg.mass = 5f;
-            rg.linearDamping = 0f;
-            rg.linearVelocity = Vector3.zero;
-            rg.angularVelocity = Vector3.zero;
-            rg.AddForce(new Vector3(0,80f,0), ForceMode.Impulse);
         }else{
             //Efecto sonoro malo
-            rg.linearDamping = 0f;
-            rg.angularDamping = 0f;
-            rg.automaticCenterOfMass = true;
-            bx.material = NBouncy;
-            rg.inertiaTensor = new Vector3(2f,15f,2f);
-            rg.useGravity = true;
+            
         } 
         StartCoroutine(AutoDestruction());
 
     }
 
     public IEnumerator AutoDestruction(){
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(0.5f);
         Destroy(gameObject);
     }
 }

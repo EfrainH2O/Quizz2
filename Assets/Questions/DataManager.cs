@@ -30,6 +30,9 @@ public class DataManager : MonoBehaviour
     private TextMeshProUGUI QuestionCountUI;
     [SerializeField]
     private GameObject FinalMessage;
+    [SerializeField]
+
+    private Scoreboard scoreboard;
     //Objects to interact
     private ObjectManager objectM;
 
@@ -71,9 +74,9 @@ public class DataManager : MonoBehaviour
     }
     public void SubmitAnswer(bool isCorrect)
     {
-        questionIndex = questionIndex == questionsCount? questionIndex : questionIndex +1;
+        questionIndex = questionIndex < questionsCount? questionIndex+1 : questionIndex ;
         if(isCorrect){
-            score += 200*timeLeft/MaxTimeAnswer ;
+            score ++ ;
         }
         StopAllCoroutines();
         QuestionaryManager.Instance.ResetData();
@@ -97,14 +100,18 @@ public class DataManager : MonoBehaviour
     {
         if(inQuestions){
             TimerUI.text = timeLeft.ToString();
-            ScoreUI.text = "Puntaje: "+ score.ToString() ;
-            QuestionCountUI.text =( questionIndex+1) + "/" + questionsCount;
+            ScoreUI.text = "Correctas: "+ score + " / "  + questionsCount ;
+            QuestionCountUI.text ="Preguntas: "+ questionIndex + " / " + questionsCount;
         }else{
             TimerUI.gameObject.SetActive(false);
             ScoreUI.gameObject.SetActive(false);
             QuestionCountUI.gameObject.SetActive(false);
-            FinalMessage.SetActive(true);
-            FinalMessage.GetComponent<TextMeshProUGUI>().text = "Puntaje: "+score.ToString();
+            scoreboard.max = questionsCount;
+            scoreboard.correct = score;
+            scoreboard.transform.parent.gameObject.SetActive(true);
+            FinalMessage.gameObject.SetActive(true);
+            FinalMessage.GetComponent<TextMeshProUGUI>().text = "Correcto: "+score +" / "+ questionsCount;
+
             gameObject.SetActive(false);
         }
         
