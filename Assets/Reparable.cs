@@ -4,17 +4,40 @@ using UnityEngine;
 public class Reparable : MonoBehaviour
 {
     private Vector3 spawn;
-
     public float ObVel;
 
+    [Header("Audio Effects")]
+    [SerializeField] private AudioClip createSound;
+    [SerializeField] private AudioClip destroySound;
+    private AudioSource audioSource;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    [Header("Visual Effects")]
+    [SerializeField] private GameObject createVFX;
+    [SerializeField] private GameObject destroyVFX;
+
     void Awake()
     {
         spawn = transform.position;
+        
+        // Initialize AudioSource
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+            audioSource.playOnAwake = false;
+            audioSource.volume = 1f;
+        }
+
+        PlayCreateEffect();
     }
 
-    public void ReturnToPlace(){
+    private void OnDestroy()
+    {
+        PlayDestroyEffect();
+    }
+
+    public void ReturnToPlace()
+    {
         StartCoroutine(MoveObject());
     }
 
@@ -22,14 +45,54 @@ public class Reparable : MonoBehaviour
     {
         while (transform.position.y != spawn.y)
         {
-            transform.transform.position = Vector3.MoveTowards(transform.position, spawn, ObVel*Time.deltaTime);
+            transform.transform.position = Vector3.MoveTowards(transform.position, spawn, ObVel * Time.deltaTime);
             yield return null;
         }
-        //Aqui pones que se efectue un efecto en esta posicion de sonido y visual
-    }
-    
-    public IEnumerator Show(){
-        yield return new WaitForSeconds (0.3f);
+        PlayCreateEffect();
     }
 
+    private void PlayCreateEffect()
+    {
+        // Play sound effect
+        if (createSound != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(createSound);
+        }
+
+        // Spawn visual effect
+        if (createVFX != null)
+        {
+            Instantiate(createVFX, transform.position, Quaternion.identity);
+        }
+    }
+
+    private void PlayDestroyEffect()
+    {
+        // Play sound effect
+        if (destroySound != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(destroySound);
+        }
+
+        // Spawn visual effect
+        if (destroyVFX != null)
+        {
+            Instantiate(destroyVFX, transform.position, Quaternion.identity);
+        }
+    }
+    
+    public IEnumerator Show()
+    {
+        yield return new WaitForSeconds(0.3f);
+    }
+
+    #if UNITY_EDITOR
+    private void OnValidate()
+    {
+        if (createSound == null)
+            Debug.LogWarning($"Create sound not assigned on {gameObject.name}");
+        if (destroySound == null)
+            Debug.LogWarning($"Destroy sound not assigned on {gameObject.name}");
+    }
+    #endif
 }
