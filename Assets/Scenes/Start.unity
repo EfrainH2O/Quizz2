@@ -5491,8 +5491,8 @@ MonoBehaviour:
   floatAmount: 4
   hoverScaleMultiplier: 1.2
   scaleSpeed: 5
-  hoverSound: {fileID: 0}
-  clickSound: {fileID: 0}
+  hoverSound: {fileID: 8300000, guid: 2e7052da95465444a91fc0c95388af58, type: 3}
+  clickSound: {fileID: 8300000, guid: 6a0e477e6fe754d459ec22cb73952236, type: 3}
   transitionSound: {fileID: 0}
 --- !u!224 &5181550279142367682
 RectTransform:
@@ -5776,8 +5776,8 @@ MonoBehaviour:
   floatAmount: 4
   hoverScaleMultiplier: 1.2
   scaleSpeed: 5
-  hoverSound: {fileID: 0}
-  clickSound: {fileID: 0}
+  hoverSound: {fileID: 8300000, guid: 2e7052da95465444a91fc0c95388af58, type: 3}
+  clickSound: {fileID: 8300000, guid: 6a0e477e6fe754d459ec22cb73952236, type: 3}
   transitionSound: {fileID: 0}
 --- !u!114 &7026532276791651846
 MonoBehaviour:
@@ -5979,7 +5979,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &7649456041312497125
 RectTransform:
   m_ObjectHideFlags: 0
