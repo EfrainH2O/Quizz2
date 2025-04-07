@@ -45,25 +45,16 @@ public class ObjectManager : MonoBehaviour
         tempClone.GetComponent<CloneChar>()?.FinalAction(result);
         if (result)
         {
-            //Debug.Log("empieza partícula CORRECTA");
-            correctParticle.gameObject.SetActive(true);
-            correctParticle.Play();
-            StartCoroutine(WaitForParticleToFinish(correctParticle));
-            //Debug.Log("acabo partícula CORRECTA");
-            electrodomesticos[actualItem].gameObject.SetActive(true);
-            electrodomesticos[actualItem].ReturnToPlace();
+            StartCoroutine(PlayCorrectEffect());
         }
         else
         {
-            //Debug.Log("empieza partícula INCORRECTA");
-            wrongParticle.gameObject.SetActive(true);
-            wrongParticle.Play();
-            StartCoroutine(WaitForParticleToFinish(wrongParticle));
-            //Debug.Log("acabo partícula INCORRECTA");
+            StartCoroutine(PlayWrongEffect());
         }
+        // actualItem++;
+        // StartReparation();
         
-        actualItem++;
-        StartReparation();
+        
     }
 
     private IEnumerator ShowItem()
@@ -97,6 +88,41 @@ public class ObjectManager : MonoBehaviour
             tempClone.transform.localScale = Vector3.one * 0.2f;
         }
     }
+    private IEnumerator PlayCorrectEffect()
+    {
+        if (correctParticle == null) yield break;
+
+        correctParticle.gameObject.SetActive(true);
+        correctParticle.Play();
+
+        yield return WaitForParticleToFinish(correctParticle);
+        correctParticle.gameObject.SetActive(false);
+
+        electrodomesticos[actualItem].gameObject.SetActive(true);
+        electrodomesticos[actualItem].ReturnToPlace();
+        //yield return new WaitForSeconds(0.5f);
+
+        actualItem++;
+        StartReparation();
+    }
+
+    private IEnumerator PlayWrongEffect()
+    {
+        if (wrongParticle == null) yield break;
+
+        wrongParticle.gameObject.SetActive(true);
+        wrongParticle.Play();
+
+        yield return WaitForParticleToFinish(wrongParticle);
+        
+        //yield return new WaitForSeconds(0.5f);
+        actualItem++;
+        StartReparation();
+        //wrongParticle.gameObject.SetActive(false);
+
+    }
+
+    //extra
     private IEnumerator WaitForParticleToFinish(ParticleSystem particle)
     {
         if (particle == null || !particle.gameObject.activeInHierarchy)
