@@ -68,8 +68,11 @@ public class CloseButtonSound : MonoBehaviour, IPointerEnterHandler, IPointerExi
         {
             audioSource.PlayOneShot(clickSound);
         }
-
+        if (gameObject.activeInHierarchy)
+    {
         StartCoroutine(TransitionSequence());
+    }
+
     }
 
     private IEnumerator TransitionSequence()

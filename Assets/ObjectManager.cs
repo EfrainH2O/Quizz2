@@ -45,13 +45,21 @@ public class ObjectManager : MonoBehaviour
         tempClone.GetComponent<CloneChar>()?.FinalAction(result);
         if (result)
         {
+            //Debug.Log("empieza partícula CORRECTA");
+            correctParticle.gameObject.SetActive(true);
             correctParticle.Play();
+            StartCoroutine(WaitForParticleToFinish(correctParticle));
+            //Debug.Log("acabo partícula CORRECTA");
             electrodomesticos[actualItem].gameObject.SetActive(true);
             electrodomesticos[actualItem].ReturnToPlace();
         }
         else
         {
+            //Debug.Log("empieza partícula INCORRECTA");
+            wrongParticle.gameObject.SetActive(true);
             wrongParticle.Play();
+            StartCoroutine(WaitForParticleToFinish(wrongParticle));
+            //Debug.Log("acabo partícula INCORRECTA");
         }
         
         actualItem++;
@@ -88,6 +96,18 @@ public class ObjectManager : MonoBehaviour
             cc.MaxScale = tempClone.transform.localScale * 0.8f;
             tempClone.transform.localScale = Vector3.one * 0.2f;
         }
+    }
+    private IEnumerator WaitForParticleToFinish(ParticleSystem particle)
+    {
+        if (particle == null || !particle.gameObject.activeInHierarchy)
+        {
+            yield break; 
+        }
+        while (particle.isPlaying)
+        {
+            yield return null;
+        }
+
     }
 
     public void StartReparation()
