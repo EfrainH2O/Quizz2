@@ -112,8 +112,10 @@ public class ObjectManager : MonoBehaviour
 
         wrongParticle.gameObject.SetActive(true);
         wrongParticle.Play();
+        
 
         yield return WaitForParticleToFinish(wrongParticle);
+        wrongParticle.gameObject.SetActive(false);
         
         //yield return new WaitForSeconds(0.5f);
         actualItem++;
