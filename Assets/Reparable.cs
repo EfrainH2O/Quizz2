@@ -53,10 +53,10 @@ public class Reparable : MonoBehaviour
 
     private void PlayCreateEffect()
     {
-        // Play sound effect
-        if (createSound != null && audioSource != null)
+        // Create a temporary audio source at this position
+        if (createSound != null)
         {
-            audioSource.PlayOneShot(createSound);
+            AudioSource.PlayClipAtPoint(createSound, transform.position, 1f);
         }
 
         // Spawn visual effect
@@ -68,10 +68,10 @@ public class Reparable : MonoBehaviour
 
     private void PlayDestroyEffect()
     {
-        // Play sound effect
-        if (destroySound != null && audioSource != null)
+        // Create a temporary audio source at this position
+        if (destroySound != null)
         {
-            audioSource.PlayOneShot(destroySound);
+            AudioSource.PlayClipAtPoint(destroySound, transform.position, 1f);
         }
 
         // Spawn visual effect

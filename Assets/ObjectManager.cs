@@ -18,6 +18,10 @@ public class ObjectManager : MonoBehaviour
     public ParticleSystem correctParticle;
     public ParticleSystem wrongParticle;
 
+    [Header("Audio Effects")]
+    [SerializeField] private AudioClip correctSound;
+    [SerializeField] private AudioClip wrongSound;
+
     private void Start()
     {
         // Initialize list and get all Reparable objects
@@ -38,6 +42,11 @@ public class ObjectManager : MonoBehaviour
             r.ObVel = ObVel;
             r.gameObject.SetActive(false);
         }
+
+        if (correctSound == null || wrongSound == null)
+        {
+            Debug.LogWarning($"Missing sound effects on {gameObject.name}");
+        }
     }
 
     public void RepairResult(bool result)
@@ -51,10 +60,6 @@ public class ObjectManager : MonoBehaviour
         {
             StartCoroutine(PlayWrongEffect());
         }
-        // actualItem++;
-        // StartReparation();
-        
-        
     }
 
     private IEnumerator ShowItem()
@@ -63,33 +68,35 @@ public class ObjectManager : MonoBehaviour
 
         if (actualItem < electrodomesticos.Count)
         {
-            // Create and setup clone
             tempClone = Instantiate(electrodomesticos[actualItem].gameObject, clonePosition.position, Quaternion.identity);
             tempClone.transform.rotation = Quaternion.LookRotation(Vector3.forward);
             tempClone.SetActive(true);
 
-            // Setup renderer
             Renderer rend = tempClone.GetComponent<Renderer>();
             if (rend != null)
             {
                 rend.enabled = true;
             }
 
-            // Setup components
             Destroy(tempClone.GetComponent<Reparable>());
             
-            // Add animator
             Animator an = tempClone.AddComponent<Animator>();
             an.runtimeAnimatorController = ac;
             
-            // Add clone character component
             CloneChar cc = tempClone.AddComponent<CloneChar>();
             cc.MaxScale = tempClone.transform.localScale * 0.8f;
             tempClone.transform.localScale = Vector3.one * 0.2f;
         }
     }
+
     private IEnumerator PlayCorrectEffect()
     {
+        // Play correct sound
+        if (correctSound != null)
+        {
+            AudioSource.PlayClipAtPoint(correctSound, Camera.main.transform.position, 1f);
+        }
+
         if (correctParticle == null) yield break;
 
         correctParticle.gameObject.SetActive(true);
@@ -100,7 +107,6 @@ public class ObjectManager : MonoBehaviour
 
         electrodomesticos[actualItem].gameObject.SetActive(true);
         electrodomesticos[actualItem].ReturnToPlace();
-        //yield return new WaitForSeconds(0.5f);
 
         actualItem++;
         StartReparation();
@@ -108,23 +114,24 @@ public class ObjectManager : MonoBehaviour
 
     private IEnumerator PlayWrongEffect()
     {
+        // Play wrong sound
+        if (wrongSound != null)
+        {
+            AudioSource.PlayClipAtPoint(wrongSound, Camera.main.transform.position, 1f);
+        }
+
         if (wrongParticle == null) yield break;
 
         wrongParticle.gameObject.SetActive(true);
         wrongParticle.Play();
-        
 
         yield return WaitForParticleToFinish(wrongParticle);
         wrongParticle.gameObject.SetActive(false);
         
-        //yield return new WaitForSeconds(0.5f);
         actualItem++;
         StartReparation();
-        //wrongParticle.gameObject.SetActive(false);
-
     }
 
-    //extra
     private IEnumerator WaitForParticleToFinish(ParticleSystem particle)
     {
         if (particle == null || !particle.gameObject.activeInHierarchy)
@@ -135,11 +142,20 @@ public class ObjectManager : MonoBehaviour
         {
             yield return null;
         }
-
     }
 
     public void StartReparation()
     {
         StartCoroutine(ShowItem());
     }
+
+    #if UNITY_EDITOR
+    private void OnValidate()
+    {
+        if (correctSound == null)
+            Debug.LogWarning($"Correct sound not assigned on {gameObject.name}");
+        if (wrongSound == null)
+            Debug.LogWarning($"Wrong sound not assigned on {gameObject.name}");
+    }
+    #endif
 }
