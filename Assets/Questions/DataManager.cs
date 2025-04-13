@@ -54,13 +54,35 @@ public class DataManager : MonoBehaviour
     }
 
     public void StartQuestions(){
+        // inQuestions = true;
+        // score = 0;
+        // questionIndex = 0;
+        // questionsCount = Questions.Count;
+        // QuestionaryManager.Instance.NextQuestion(Questions[questionIndex]);
+        // objectM.StartReparation();
+        StartCoroutine(LoadQuestions());
+
+    }
+
+    private IEnumerator LoadQuestions()
+    {
+        // 2. Esperar a que las preguntas sean cargadas desde la API
+        yield return new WaitUntil(() => APIQuestionManager.Instance.GetQuestions().Count > 0);
+
+        // 3. Asignar las preguntas obtenidas a la lista local
+        Questions = APIQuestionManager.Instance.GetQuestions();
+
         inQuestions = true;
         score = 0;
         questionIndex = 0;
         questionsCount = Questions.Count;
+
+        // 4. Mostrar la primera pregunta con QuestionaryManager
         QuestionaryManager.Instance.NextQuestion(Questions[questionIndex]);
+
+        // Iniciar el proceso de reparación del objeto (si es necesario)
         objectM.StartReparation();
-    }
+    }
     public void StartTimer(){
         timeLeft = MaxTimeAnswer;
         StartCoroutine(CountDown());
