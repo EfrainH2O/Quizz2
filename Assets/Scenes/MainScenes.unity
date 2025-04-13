@@ -1585,7 +1585,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 427ba15372f1afb468674d80c9735079, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  apiUrl: 
+  apiUrl: http://192.168.68.107:5011/Quiz
 --- !u!1 &1093807046
 GameObject:
   m_ObjectHideFlags: 0
