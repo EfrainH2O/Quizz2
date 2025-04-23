@@ -10,7 +10,8 @@ public class APIQuestionManager : MonoBehaviour
     [Header("API Configuration")]
     [SerializeField] private string apiUrl = "http://10.21.28.5:5011/Quiz?id_curso=1&id_alumno=2";
 
-    private List<Question> questions = new List<Question>();
+    private List<Question> internalQuestions = new List<Question>();
+    public bool IsReady { get; private set; } = false;
 
     void Awake()
     {
@@ -18,41 +19,61 @@ public class APIQuestionManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
-
-            StartCoroutine(FetchQuestionsFromAPI(apiUrl)); //* Cargar preguntas apenas se instancie este script
         }
         else
         {
             Destroy(gameObject);
+            return;
         }
+    }
+
+    void Start()
+    {
+        StartCoroutine(FetchQuestionsFromAPI(apiUrl));
     }
 
     private IEnumerator FetchQuestionsFromAPI(string url)
     {
+        Debug.Log("[API] Intentando conectar con: " + url);
+
         using (UnityWebRequest request = UnityWebRequest.Get(url))
         {
             yield return request.SendWebRequest();
 
             if (request.result == UnityWebRequest.Result.Success)
             {
+                Debug.Log("[API] Conexión exitosa.");
+                
                 string wrappedJson = "{\"preguntas\":" + request.downloadHandler.text + "}";
-
                 QuestionAPIListWrapper wrapper = JsonUtility.FromJson<QuestionAPIListWrapper>(wrappedJson);
-                questions.Clear();
 
-                foreach (QuestionAPI qApi in wrapper.preguntas)
+                if (wrapper == null || wrapper.preguntas == null)
                 {
-                    questions.Add(ConvertToInternalQuestion(qApi));
+                    Debug.LogError("[API] La respuesta del servidor no pudo ser parseada.");
+                    yield break;
                 }
 
-                Debug.Log($"API Loaded: {questions.Count} questions fetched."); //* Confirmación en consola
+                Debug.Log($"[API] Recibidas {wrapper.preguntas.Count} preguntas.");
+
+                int index = 1;
+                foreach (QuestionAPI qApi in wrapper.preguntas)
+                {
+                    Question q = ConvertToInternalQuestion(qApi);
+                    internalQuestions.Add(q);
+                    Debug.Log($"[API] Pregunta {index}: \"{q.QuestionText}\" con {q.Options.Count} opciones.");
+                    index++;
+                }
+
+                IsReady = true;
+                Debug.Log("[API] Preguntas listas para usar.");
             }
             else
             {
-                Debug.LogError($"API Connection Error: {request.error}\nURL: {url}");
+                Debug.LogError($"[API] Error de conexión: {request.error}\nURL: {url}");
             }
         }
     }
+
 
     private Question ConvertToInternalQuestion(QuestionAPI apiQuestion)
     {
@@ -64,12 +85,11 @@ public class APIQuestionManager : MonoBehaviour
 
         foreach (OptionAPI opt in apiQuestion.opciones)
         {
-            Option o = new Option
+            q.Options.Add(new Option
             {
                 OptionText = opt.texto,
                 IsCorrect = opt.correcta
-            };
-            q.Options.Add(o);
+            });
         }
 
         return q;
@@ -77,9 +97,10 @@ public class APIQuestionManager : MonoBehaviour
 
     public List<Question> GetQuestions()
     {
-        return questions;
+        return internalQuestions;
     }
 
+    // Modelos del API
     [System.Serializable]
     public class QuestionAPI
     {
