@@ -7,10 +7,10 @@ public class APIQuestionManager : MonoBehaviour
 {
     #region Variables
     public static APIQuestionManager Instance { get; private set; }
-    
+
     [Header("API Configuration")]
-    [SerializeField] private string apiUrl = "http://192.168.68.107:5011/Quiz";
-    
+    [SerializeField] public string apiUrl = "http://localhost:5011/Quiz?id_curso=1&id_alumno=2";
+
     private List<Question> internalQuestions = new List<Question>();
     private int currentQuestionIndex = 0;
     #endregion
@@ -41,25 +41,46 @@ public class APIQuestionManager : MonoBehaviour
     {
         using (UnityWebRequest request = UnityWebRequest.Get(url))
         {
+            Debug.Log($"Requesting questions from API: {url}");
             yield return request.SendWebRequest();
 
             if (request.result == UnityWebRequest.Result.Success)
             {
+                Debug.Log("API response received: " + request.downloadHandler.text);
+                
                 string wrappedJson = "{\"preguntas\":" + request.downloadHandler.text + "}";
-                QuestionAPIListWrapper wrapper = JsonUtility.FromJson<QuestionAPIListWrapper>(wrappedJson);
+                QuestionAPIListWrapper wrapper = null;
 
-                foreach (QuestionAPI qApi in wrapper.preguntas)
+                try
                 {
-                    internalQuestions.Add(ConvertToInternalQuestion(qApi));
+                    wrapper = JsonUtility.FromJson<QuestionAPIListWrapper>(wrappedJson);
+                }
+                catch (System.Exception e)
+                {
+                    Debug.LogError("JSON parsing error: " + e.Message);
                 }
 
-                if (internalQuestions.Count > 0)
+                if (wrapper != null && wrapper.preguntas != null)
                 {
-                    ShowNextQuestion();
+                    foreach (QuestionAPI qApi in wrapper.preguntas)
+                    {
+                        internalQuestions.Add(ConvertToInternalQuestion(qApi));
+                    }
+
+                    Debug.Log($"Loaded {internalQuestions.Count} questions from API.");
+
+                    if (internalQuestions.Count > 0)
+                    {
+                        ShowNextQuestion(); // Puedes comentar esto si prefieres dejar que DataManager controle esto
+                    }
+                    else
+                    {
+                        Debug.LogWarning("No questions received from API.");
+                    }
                 }
                 else
                 {
-                    Debug.LogWarning("No questions received from API.");
+                    Debug.LogWarning("Parsed wrapper or preguntas list is null.");
                 }
             }
             else

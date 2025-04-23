@@ -41,8 +41,10 @@ public class QuestionaryManager : MonoBehaviour
     void Start()
     {
         score = 0;
+        
     }
 
+   
     public void NextQuestion(Question item)
     {
         foreach (GameObject option in optionsAreas)

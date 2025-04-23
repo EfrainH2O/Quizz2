@@ -96,20 +96,25 @@ public class DataManager : MonoBehaviour
     }
     public void SubmitAnswer(bool isCorrect)
     {
-        questionIndex = questionIndex < questionsCount? questionIndex+1 : questionIndex ;
+        //questionIndex = questionIndex < questionsCount? questionIndex+1 : questionIndex ;
         if(isCorrect){
             score ++ ;
         }
         StopAllCoroutines();
         QuestionaryManager.Instance.ResetData();
         objectM.RepairResult(isCorrect);
-        if(questionIndex == questionsCount){
-            QuestionaryManager.Instance.NextQuestion(null);
-            StartCoroutine(FinalCountDown());
-            Debug.Log("End Game");
-            return;
-        }else{
+
+        if (questionIndex == questionsCount - 1) // * Última pregunta aún no mostrada
+        {
             QuestionaryManager.Instance.NextQuestion(Questions[questionIndex]);
+            StartCoroutine(TriggerFinalAfterDelay());
+            //questionIndex++;
+            
+        }
+        else 
+        {
+            QuestionaryManager.Instance.NextQuestion(Questions[questionIndex]);
+            questionIndex++;
         }
     }
     private IEnumerator FinalCountDown(){
@@ -137,5 +142,11 @@ public class DataManager : MonoBehaviour
             gameObject.SetActive(false);
         }
         
+    }
+    private IEnumerator TriggerFinalAfterDelay()
+    {
+        yield return new WaitForSeconds(5f); // * da tiempo para que se vea la última pregunta completa
+        StartCoroutine(FinalCountDown()); // * ahora sí, Game Over
+        Debug.Log("End Game");
     }
 }
