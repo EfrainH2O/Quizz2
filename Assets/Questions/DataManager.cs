@@ -8,7 +8,7 @@ public class DataManager : MonoBehaviour
 {
 
     //Questions Refered Variables
-    [SerializeField]
+    
     public List<Question> Questions;
     //Singleton
     public static DataManager Instance;
@@ -49,40 +49,40 @@ public class DataManager : MonoBehaviour
     public void Start()
     {
         FinalMessage.SetActive(false);
-        StartQuestions();
+        StartCoroutine(InitializeWithAPI());
         
     }
-
-    public void StartQuestions(){
-        // inQuestions = true;
-        // score = 0;
-        // questionIndex = 0;
-        // questionsCount = Questions.Count;
-        // QuestionaryManager.Instance.NextQuestion(Questions[questionIndex]);
-        // objectM.StartReparation();
-        StartCoroutine(LoadQuestions());
-
-    }
-
-    private IEnumerator LoadQuestions()
+    private IEnumerator InitializeWithAPI()
     {
-        // 2. Esperar a que las preguntas sean cargadas desde la API
-        yield return new WaitUntil(() => APIQuestionManager.Instance.GetQuestions().Count > 0);
+        Questions?.Clear(); // al inicio de InitializeWithAPI
 
-        // 3. Asignar las preguntas obtenidas a la lista local
+        // Esperar a que el API esté listo
+        while (APIQuestionManager.Instance == null || !APIQuestionManager.Instance.IsReady)
+        {
+            yield return null;
+        }
+
         Questions = APIQuestionManager.Instance.GetQuestions();
 
+        if (Questions == null || Questions.Count == 0)
+        {
+            Debug.LogError("[DataManager] No se cargaron preguntas del API.");
+            yield break;
+        }
+
+        Debug.Log($"[DataManager] Se cargaron {Questions.Count} preguntas del API.");
+        StartQuestions();
+    }
+
+
+    public void StartQuestions(){
         inQuestions = true;
         score = 0;
         questionIndex = 0;
         questionsCount = Questions.Count;
-
-        // 4. Mostrar la primera pregunta con QuestionaryManager
         QuestionaryManager.Instance.NextQuestion(Questions[questionIndex]);
-
-        // Iniciar el proceso de reparación del objeto (si es necesario)
         objectM.StartReparation();
-    }
+    }
     public void StartTimer(){
         timeLeft = MaxTimeAnswer;
         StartCoroutine(CountDown());
@@ -96,25 +96,20 @@ public class DataManager : MonoBehaviour
     }
     public void SubmitAnswer(bool isCorrect)
     {
-        //questionIndex = questionIndex < questionsCount? questionIndex+1 : questionIndex ;
+        questionIndex = questionIndex < questionsCount? questionIndex+1 : questionIndex ;
         if(isCorrect){
             score ++ ;
         }
         StopAllCoroutines();
         QuestionaryManager.Instance.ResetData();
         objectM.RepairResult(isCorrect);
-
-        if (questionIndex == questionsCount - 1) // * Última pregunta aún no mostrada
-        {
+        if(questionIndex == questionsCount){
+            QuestionaryManager.Instance.NextQuestion(null);
+            StartCoroutine(FinalCountDown());
+            Debug.Log("End Game");
+            return;
+        }else{
             QuestionaryManager.Instance.NextQuestion(Questions[questionIndex]);
-            StartCoroutine(TriggerFinalAfterDelay());
-            //questionIndex++;
-            
-        }
-        else 
-        {
-            QuestionaryManager.Instance.NextQuestion(Questions[questionIndex]);
-            questionIndex++;
         }
     }
     private IEnumerator FinalCountDown(){
@@ -142,11 +137,5 @@ public class DataManager : MonoBehaviour
             gameObject.SetActive(false);
         }
         
-    }
-    private IEnumerator TriggerFinalAfterDelay()
-    {
-        yield return new WaitForSeconds(5f); // * da tiempo para que se vea la última pregunta completa
-        StartCoroutine(FinalCountDown()); // * ahora sí, Game Over
-        Debug.Log("End Game");
     }
 }
