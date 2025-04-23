@@ -473,7 +473,6 @@ RectTransform:
   m_Children:
   - {fileID: 1584315763}
   - {fileID: 429603427}
-  - {fileID: 1074732901}
   m_Father: {fileID: 1895231133}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -1561,12 +1560,12 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1074732900}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 130173989}
+  m_Father: {fileID: 1895231133}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -1585,7 +1584,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 427ba15372f1afb468674d80c9735079, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  apiUrl: http://192.168.68.107:5011/Quiz
+  apiUrl: http://localhost:5011/Quiz?id_curso=1&id_alumno=2
 --- !u!1 &1093807046
 GameObject:
   m_ObjectHideFlags: 0
@@ -2828,6 +2827,7 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1074732901}
   - {fileID: 130173989}
   - {fileID: 117825329}
   - {fileID: 1521612199}

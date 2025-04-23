@@ -5,38 +5,28 @@ using System.Collections.Generic;
 
 public class APIQuestionManager : MonoBehaviour
 {
-    #region Variables
     public static APIQuestionManager Instance { get; private set; }
-    
-    [Header("API Configuration")]
-    [SerializeField] private string apiUrl = "http://192.168.68.107:5011/Quiz";
-    
-    private List<Question> internalQuestions = new List<Question>();
-    private int currentQuestionIndex = 0;
-    #endregion
 
-    #region Unity Lifecycle
+    [Header("API Configuration")]
+    [SerializeField] private string apiUrl = "http://10.21.28.5:5011/Quiz?id_curso=1&id_alumno=2";
+
+    private List<Question> questions = new List<Question>();
+
     void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+
+            StartCoroutine(FetchQuestionsFromAPI(apiUrl)); //* Cargar preguntas apenas se instancie este script
         }
         else
         {
             Destroy(gameObject);
-            return;
         }
     }
 
-    void Start()
-    {
-        StartCoroutine(FetchQuestionsFromAPI(apiUrl));
-    }
-    #endregion
-
-    #region API Communication
     private IEnumerator FetchQuestionsFromAPI(string url)
     {
         using (UnityWebRequest request = UnityWebRequest.Get(url))
@@ -46,21 +36,16 @@ public class APIQuestionManager : MonoBehaviour
             if (request.result == UnityWebRequest.Result.Success)
             {
                 string wrappedJson = "{\"preguntas\":" + request.downloadHandler.text + "}";
+
                 QuestionAPIListWrapper wrapper = JsonUtility.FromJson<QuestionAPIListWrapper>(wrappedJson);
+                questions.Clear();
 
                 foreach (QuestionAPI qApi in wrapper.preguntas)
                 {
-                    internalQuestions.Add(ConvertToInternalQuestion(qApi));
+                    questions.Add(ConvertToInternalQuestion(qApi));
                 }
 
-                if (internalQuestions.Count > 0)
-                {
-                    ShowNextQuestion();
-                }
-                else
-                {
-                    Debug.LogWarning("No questions received from API.");
-                }
+                Debug.Log($"API Loaded: {questions.Count} questions fetched."); //* Confirmación en consola
             }
             else
             {
@@ -89,50 +74,12 @@ public class APIQuestionManager : MonoBehaviour
 
         return q;
     }
-    #endregion
-
-    #region Question Management
-    public void ShowNextQuestion()
-    {
-        if (currentQuestionIndex < internalQuestions.Count)
-        {
-            if (QuestionaryManager.Instance != null)
-            {
-                QuestionaryManager.Instance.NextQuestion(internalQuestions[currentQuestionIndex]);
-                currentQuestionIndex++;
-            }
-            else
-            {
-                Debug.LogError("QuestionaryManager instance not found!");
-            }
-        }
-        else
-        {
-            Debug.Log("No more questions available.");
-        }
-    }
-
-    public void ResetQuestions()
-    {
-        currentQuestionIndex = 0;
-    }
 
     public List<Question> GetQuestions()
     {
-        return internalQuestions;
+        return questions;
     }
 
-    public Question GetCurrentQuestion()
-    {
-        if (currentQuestionIndex < internalQuestions.Count)
-        {
-            return internalQuestions[currentQuestionIndex];
-        }
-        return null;
-    }
-    #endregion
-
-    #region Data Models
     [System.Serializable]
     public class QuestionAPI
     {
@@ -154,5 +101,4 @@ public class APIQuestionManager : MonoBehaviour
     {
         public List<QuestionAPI> preguntas;
     }
-    #endregion
 }
