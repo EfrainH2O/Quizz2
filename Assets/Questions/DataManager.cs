@@ -17,6 +17,7 @@ public class DataManager : MonoBehaviour
     public int score;
     private int questionIndex;
     public int questionsCount;
+    //public bool usarAPI = true; //*
     public int timeLeft;
     [SerializeField]
     private int MaxTimeAnswer;
@@ -50,28 +51,29 @@ public class DataManager : MonoBehaviour
     {
         FinalMessage.SetActive(false);
         StartQuestions();
-        //StartCoroutine(InitializeWithAPI());
+        StartCoroutine(InitializeWithAPI());
     }
-    // private IEnumerator InitializeWithAPI()
-    // {
-    //     Questions?.Clear();
-    //     // Esperar a que el API esté listo
-    //     while (APIQuestionManager.Instance == null || !APIQuestionManager.Instance.IsReady)
-    //     {
-    //         yield return null;
-    //     }
 
-    //     Questions = APIQuestionManager.Instance.GetQuestions();
+    private IEnumerator InitializeWithAPI()
+    {
+        Questions?.Clear();
+        // Esperar a que el API esté listo
+        while (APIQuestionManager.Instance == null || !APIQuestionManager.Instance.IsReady)
+        {
+            yield return null;
+        }
 
-    //     if (Questions == null || Questions.Count == 0)
-    //     {
-    //         Debug.LogError("[DataManager] No se cargaron preguntas del API.");
-    //         yield break;
-    //     }
+        Questions = APIQuestionManager.Instance.GetQuestions();
 
-    //     Debug.Log($"[DataManager] Se cargaron {Questions.Count} preguntas del API.");
-    //     StartQuestions();
-    // }
+        if (Questions == null || Questions.Count == 0)
+        {
+            Debug.LogError("[DataManager] No se cargaron preguntas del API.");
+            yield break;
+        }
+
+        Debug.Log($"[DataManager] Se cargaron {Questions.Count} preguntas del API.");
+        StartQuestions();
+    }
 
 
     public void StartQuestions(){
