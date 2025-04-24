@@ -8,7 +8,7 @@ public class DataManager : MonoBehaviour
 {
 
     //Questions Refered Variables
-    [SerializeField]
+    
     public List<Question> Questions;
     //Singleton
     public static DataManager Instance;

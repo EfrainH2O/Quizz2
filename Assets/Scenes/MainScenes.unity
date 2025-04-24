@@ -380,40 +380,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Questions:
-  - QuestionText: Que produce Whirlpool?
-    Options:
-    - OptionText: Electrodomesticos
-      IsCorrect: 1
-    - OptionText: Lavadoras
-      IsCorrect: 0
-    - OptionText: Servicios de Television
-      IsCorrect: 0
-    - OptionText: Servicios Hidraulicos
-      IsCorrect: 0
-  - QuestionText: Que electrodomesticos no son linea blanca?
-    Options:
-    - OptionText: Lavadora
-      IsCorrect: 0
-    - OptionText: Secadora
-      IsCorrect: 0
-    - OptionText: Television
-      IsCorrect: 1
-  - QuestionText: Donde es la sede de Whirlpool?
-    Options:
-    - OptionText: Mexico
-      IsCorrect: 0
-    - OptionText: Estados Unidos
-      IsCorrect: 1
-  - QuestionText: Cual de los siguientes modelos pertenece a Whirlpool
-    Options:
-    - OptionText: 7MWTW1904LM
-      IsCorrect: 1
-    - OptionText: LMA71214VBAB0
-      IsCorrect: 0
-    - OptionText: LWM-19IIR
-      IsCorrect: 0
-    - OptionText: WA22C3543GW/AX
-      IsCorrect: 0
+  - QuestionText: 
+    Options: []
+  - QuestionText: 
+    Options: []
+  - QuestionText: 
+    Options: []
+  - QuestionText: 
+    Options: []
+  - QuestionText: 
+    Options: []
   score: 0
   questionsCount: 0
   timeLeft: 0
