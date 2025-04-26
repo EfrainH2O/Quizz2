@@ -8,7 +8,8 @@ public class CloneChar : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
 
-    private  float vel;    public Vector3 MaxScale;
+    private  float vel;    
+    public Vector3 MaxScale;
     private float MaxTime = 120f;
 
 
@@ -46,7 +47,7 @@ public class CloneChar : MonoBehaviour
     }
 
     public IEnumerator AutoDestruction(){
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.2f);
         Destroy(gameObject);
     }
 }

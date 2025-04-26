@@ -50,13 +50,14 @@ public class DataManager : MonoBehaviour
     public void Start()
     {
         FinalMessage.SetActive(false);
-        StartQuestions();
+        StartQuestionsEmpty(); 
         StartCoroutine(InitializeWithAPI());
+        
     }
 
     private IEnumerator InitializeWithAPI()
     {
-        Questions?.Clear();
+        //Questions?.Clear(); 
         // Esperar a que el API esté listo
         while (APIQuestionManager.Instance == null || !APIQuestionManager.Instance.IsReady)
         {
@@ -65,6 +66,7 @@ public class DataManager : MonoBehaviour
 
         Questions = APIQuestionManager.Instance.GetQuestions();
 
+
         if (Questions == null || Questions.Count == 0)
         {
             Debug.LogError("[DataManager] No se cargaron preguntas del API.");
@@ -72,18 +74,42 @@ public class DataManager : MonoBehaviour
         }
 
         Debug.Log($"[DataManager] Se cargaron {Questions.Count} preguntas del API.");
+        questionsCount = Questions.Count;
+        Debug.Log($"[DataManager] Nuevo total de preguntas: {questionsCount}");
+
+        //objectM.SetupObjects(); 
+        
         StartQuestions();
     }
 
+
+    public void StartQuestionsEmpty(){
+        inQuestions = true;
+        score = 0;
+        questionIndex = 0;
+        questionsCount = 0;
+        //Questions?.Clear(); 
+        //QuestionaryManager.Instance.NextQuestion(Questions[questionIndex]);
+        //objectM.StartReparation();
+    }
 
     public void StartQuestions(){
         inQuestions = true;
         score = 0;
         questionIndex = 0;
-        questionsCount = Questions.Count;
-        QuestionaryManager.Instance.NextQuestion(Questions[questionIndex]);
+        //questionsCount = Questions.Count;
+        //Questions?.Clear(); 
+
+        Debug.Log($"[DataManager] Iniciando juego con {questionsCount} preguntas.");
+
+        objectM.SetupObjects();
         objectM.StartReparation();
+
+        QuestionaryManager.Instance.NextQuestion(Questions[questionIndex]);
+        // objectM.StartReparation();
     }
+
+    
     public void StartTimer(){
         timeLeft = MaxTimeAnswer;
         StartCoroutine(CountDown());
@@ -111,6 +137,7 @@ public class DataManager : MonoBehaviour
             return;
         }else{
             QuestionaryManager.Instance.NextQuestion(Questions[questionIndex]);
+            //objectM.StartReparation();
         }
     }
     private IEnumerator FinalCountDown(){

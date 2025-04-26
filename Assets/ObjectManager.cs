@@ -24,30 +24,78 @@ public class ObjectManager : MonoBehaviour
 
     private void Start()
     {
-        // Initialize list and get all Reparable objects
-        electrodomesticos = new List<Reparable>(FindObjectsByType<Reparable>(FindObjectsSortMode.None));
-        actualItem = 0;
-        ListSize = DataManager.Instance.questionsCount;
+        // // Initialize list and get all Reparable objects
+        // electrodomesticos = new List<Reparable>(FindObjectsByType<Reparable>(FindObjectsSortMode.None));
+        // actualItem = 0;
+        // ListSize = DataManager.Instance.questionsCount;
+        // Debug.Log($"[ObjectManager] Clones esperados: {ListSize}");
         
-        // Reduce list to desired size
-        while (electrodomesticos.Count > ListSize)
+            
+        // // Reduce list to desired size
+        // while (electrodomesticos.Count > ListSize)
+        // {
+        //     electrodomesticos.RemoveAt(Random.Range(0, electrodomesticos.Count));
+        // }
+
+        // // Setup each reparable object
+        // foreach(Reparable r in electrodomesticos)
+        // {
+        //     r.transform.position += new Vector3(0, clonePosition.position.y, 0);
+        //     r.ObVel = ObVel;
+        //     r.gameObject.SetActive(false);
+        // }
+
+        // if (correctSound == null || wrongSound == null)
+        // {
+        //     Debug.LogWarning($"Missing sound effects on {gameObject.name}");
+        // }
+    }
+
+
+    public void SetupObjects()
+    {
+        ListSize = DataManager.Instance.questionsCount;
+        Debug.Log($"[ObjectManager] Clones esperados (preguntas): {ListSize}");
+
+        electrodomesticos = new List<Reparable>(FindObjectsByType<Reparable>(FindObjectsSortMode.None));
+        Debug.Log($"[ObjectManager] Objetos Reparable encontrados en escena: {electrodomesticos.Count}");
+
+        actualItem = 0;
+
+        int objetosADesaparecer = ListSize;
+        int desaparecidos = 0;
+
+        for (int i = 0; i < electrodomesticos.Count; i++)
         {
-            electrodomesticos.RemoveAt(Random.Range(0, electrodomesticos.Count));
+            if (desaparecidos < objetosADesaparecer)
+            {
+                electrodomesticos[i].transform.position += new Vector3(0, clonePosition.position.y, 0);
+                electrodomesticos[i].ObVel = ObVel;
+                electrodomesticos[i].gameObject.SetActive(false);
+                desaparecidos++;
+            }
+            else
+            {
+                electrodomesticos[i].gameObject.SetActive(true);
+            }
         }
 
-        // Setup each reparable object
-        foreach(Reparable r in electrodomesticos)
-        {
-            r.transform.position += new Vector3(0, clonePosition.position.y, 0);
-            r.ObVel = ObVel;
-            r.gameObject.SetActive(false);
-        }
+        Debug.Log($"[ObjectManager] Total de objetos ocultados: {desaparecidos}");
+        Debug.Log($"[ObjectManager] Total de objetos visibles restantes: {electrodomesticos.Count - desaparecidos}");
 
         if (correctSound == null || wrongSound == null)
         {
-            Debug.LogWarning($"Missing sound effects on {gameObject.name}");
+            Debug.LogWarning($"[ObjectManager] Missing sound effects on {gameObject.name}");
         }
+
+        Debug.Log("[ObjectManager] Setup de clones terminado.");
     }
+
+
+
+
+
+
 
     public void RepairResult(bool result)
     {
@@ -65,6 +113,12 @@ public class ObjectManager : MonoBehaviour
     private IEnumerator ShowItem()
     {
         yield return new WaitForSeconds(0.5f);
+        
+        if (actualItem >= DataManager.Instance.questionsCount)
+        {
+            Debug.Log("[ObjectManager] Ya no se generan más clones. Todos los reparables fueron usados.");
+            yield break;
+        }
 
         if (actualItem < electrodomesticos.Count)
         {
@@ -148,6 +202,11 @@ public class ObjectManager : MonoBehaviour
     {
         StartCoroutine(ShowItem());
     }
+
+
+    
+
+
 
     #if UNITY_EDITOR
     private void OnValidate()

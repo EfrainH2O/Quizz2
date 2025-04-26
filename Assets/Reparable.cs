@@ -87,12 +87,12 @@ public class Reparable : MonoBehaviour
     }
 
     #if UNITY_EDITOR
-    private void OnValidate()
-    {
-        if (createSound == null)
-            Debug.LogWarning($"Create sound not assigned on {gameObject.name}");
-        if (destroySound == null)
-            Debug.LogWarning($"Destroy sound not assigned on {gameObject.name}");
-    }
+    // private void OnValidate()
+    // {
+    //     if (createSound == null)
+    //         Debug.LogWarning($"Create sound not assigned on {gameObject.name}");
+    //     if (destroySound == null)
+    //         Debug.LogWarning($"Destroy sound not assigned on {gameObject.name}");
+    // }
     #endif
 }
