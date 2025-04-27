@@ -21,6 +21,8 @@ public class DataManager : MonoBehaviour
     public int timeLeft;
     [SerializeField]
     private int MaxTimeAnswer;
+    private bool resultSent = false;
+
     //UI to FIll
 
     [SerializeField]
@@ -153,6 +155,11 @@ public class DataManager : MonoBehaviour
             ScoreUI.text = "Correctas: "+ score + " / "  + questionsCount ;
             QuestionCountUI.text ="Preguntas: "+ questionIndex + " / " + questionsCount;
         }else{
+            if (!resultSent)
+            {
+                resultSent = true;
+                PostQuizResult.Instance.SendResult(score, questionsCount);
+            }
             TimerUI.gameObject.SetActive(false);
             ScoreUI.gameObject.SetActive(false);
             QuestionCountUI.gameObject.SetActive(false);

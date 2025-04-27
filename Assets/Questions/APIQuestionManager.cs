@@ -7,9 +7,6 @@ public class APIQuestionManager : MonoBehaviour
 {
     public static APIQuestionManager Instance { get; private set; }
 
-    [Header("API Configuration")]
-    [SerializeField] private string apiUrl = "http://10.21.28.5:5011/Quiz?id_curso=1&id_alumno=2";
-
     private List<Question> internalQuestions = new List<Question>();
     public bool IsReady { get; private set; } = false;
 
@@ -29,6 +26,22 @@ public class APIQuestionManager : MonoBehaviour
 
     void Start()
     {
+        StartCoroutine(WaitForTokenAndFetchQuestions());
+    }
+
+    private IEnumerator WaitForTokenAndFetchQuestions()
+    {
+        // Esperar a que TokenManager tenga datos válidos
+        while (string.IsNullOrEmpty(TokenManager.Instance.Token) || TokenManager.Instance.CursoId == 0)
+        {
+            Debug.Log("[API] Esperando Token y CursoId...");
+            yield return new WaitForSeconds(0.5f);
+        }
+
+        Debug.Log("[API] Token y CursoId recibidos. Procediendo a obtener preguntas.");
+
+        string apiUrl = $"http://10.21.28.5:5011/Quiz?id_curso={TokenManager.Instance.CursoId}&id_alumno=2";
+
         StartCoroutine(FetchQuestionsFromAPI(apiUrl));
     }
 
@@ -38,12 +51,15 @@ public class APIQuestionManager : MonoBehaviour
 
         using (UnityWebRequest request = UnityWebRequest.Get(url))
         {
+            // 🔥 Agregar el token en el header
+            request.SetRequestHeader("Authorization", "Bearer " + TokenManager.Instance.Token);
+
             yield return request.SendWebRequest();
 
             if (request.result == UnityWebRequest.Result.Success)
             {
                 Debug.Log("[API] Conexión exitosa.");
-                
+
                 string wrappedJson = "{\"preguntas\":" + request.downloadHandler.text + "}";
                 QuestionAPIListWrapper wrapper = JsonUtility.FromJson<QuestionAPIListWrapper>(wrappedJson);
 
@@ -73,7 +89,6 @@ public class APIQuestionManager : MonoBehaviour
             }
         }
     }
-
 
     private Question ConvertToInternalQuestion(QuestionAPI apiQuestion)
     {
