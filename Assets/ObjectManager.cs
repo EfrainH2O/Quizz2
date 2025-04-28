@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.SocialPlatforms.Impl;
 
@@ -10,7 +9,7 @@ public class ObjectManager : MonoBehaviour
     private int ListSize; 
     private int actualItem;
     
-    [SerializeField] private AnimatorController ac;
+    [SerializeField] private RuntimeAnimatorController  ac;
     [SerializeField] private float ObVel; 
     [SerializeField] private Transform clonePosition;
     

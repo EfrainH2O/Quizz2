@@ -60,16 +60,31 @@ public class Scoreboard : MonoBehaviour
                 audioSource.PlayOneShot(failureSound);
             }
         }
+
+        PostQuizResult postQuiz = FindFirstObjectByType<PostQuizResult>();
+
+        if (postQuiz != null)
+        {
+            Debug.Log("Mandando resultado a PostQuiz");
+            postQuiz.SendResult(correct, max);
+        }
+        else
+        {
+            Debug.LogError("[DataManager] No se encontró el componente PostQuizResult en la escena.");
+        }
     }
 
     private IEnumerator Filling()
     {
         float fillSpeed = 1.2f;
+        
         while(barr.fillAmount != percent)
         {
             barr.fillAmount = Mathf.Lerp(barr.fillAmount, percent, fillSpeed * Time.deltaTime);
             yield return null;
         }
+
+        
     }
 
     #if UNITY_EDITOR
