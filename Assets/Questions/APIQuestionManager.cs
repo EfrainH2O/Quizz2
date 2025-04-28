@@ -51,7 +51,7 @@ public class APIQuestionManager : MonoBehaviour
 
         using (UnityWebRequest request = UnityWebRequest.Get(url))
         {
-            // 🔥 Agregar el token en el header
+            //  Agregar el token en el header
             request.SetRequestHeader("Authorization", "Bearer " + TokenManager.Instance.Token);
 
             yield return request.SendWebRequest();

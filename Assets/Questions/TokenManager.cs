@@ -24,7 +24,7 @@ public class TokenManager : MonoBehaviour
     // Método para recibir el token desde React
     public void ReceiveToken(string token)
     {
-        Debug.Log($"[TokenManager] Token recibido: {token}"); // <-- ✅ Aquí imprime
+        Debug.Log($"[TokenManager] Token recibido: {token}"); 
         Token = token;
     }
 
@@ -33,7 +33,7 @@ public class TokenManager : MonoBehaviour
     {
         if (int.TryParse(cursoIdString, out int cursoId))
         {
-            Debug.Log($"[TokenManager] Curso ID recibido: {cursoId}"); // <-- ✅ Aquí imprime
+            Debug.Log($"[TokenManager] Curso ID recibido: {cursoId}"); 
             CursoId = cursoId;
         }
         else
