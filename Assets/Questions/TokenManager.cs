@@ -13,7 +13,7 @@ public class TokenManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject); // Opcional: persistir entre escenas
+            DontDestroyOnLoad(gameObject); //no se destruya al cambiar de escena
         }
         else
         {
@@ -21,14 +21,25 @@ public class TokenManager : MonoBehaviour
         }
     }
 
-    // Método para recibir el token desde React
+        void Start()
+    {
+        // SOLO PARA PRUEBA: Forzar Token y CursoId
+        Token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjEwMDAiLCJyb2xlIjoiMCIsIm5iZiI6MTc0NTg0MzE3NCwiZXhwIjoxNzUxMjQzMTc0LCJpYXQiOjE3NDU4NDMxNzQsImlzcyI6IllvdXJJc3N1ZXIiLCJhdWQiOiJZb3VyQXVkaWVuY2UifQ.yolFhANDLySqF2q1MLTJT-U7eRVmEvq6wFme_M-7S2A";
+        CursoId = 1;
+
+        Debug.Log($"[TokenManager] Token de prueba asignado: {Token}");
+        Debug.Log($"[TokenManager] CursoId de prueba asignado: {CursoId}");
+    }
+
+
+    // recibe el token desde react
     public void ReceiveToken(string token)
     {
         Debug.Log($"[TokenManager] Token recibido: {token}"); 
         Token = token;
     }
 
-    // Método para recibir el curso ID desde React
+    // metodo para recibir el cursoid
     public void ReceiveCursoId(string cursoIdString)
     {
         if (int.TryParse(cursoIdString, out int cursoId))
