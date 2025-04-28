@@ -40,7 +40,7 @@ public class APIQuestionManager : MonoBehaviour
 
         Debug.Log("[API] Token y CursoId recibidos. Procediendo a obtener preguntas.");
 
-        string apiUrl = $"http://10.21.28.5:5011/Quiz?id_curso={TokenManager.Instance.CursoId}&id_alumno=2";
+        string apiUrl = $"http://10.21.28.5:5011/Quiz?id_curso={TokenManager.Instance.CursoId}&id_alumno=2"; //checar id_alumno
 
         StartCoroutine(FetchQuestionsFromAPI(apiUrl));
     }
