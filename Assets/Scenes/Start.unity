@@ -1865,7 +1865,7 @@ MonoBehaviour:
   loadingScene:
     m_SceneAsset: {fileID: 102900000, guid: 03c1e74f1d89dd7439513fb268426637, type: 3}
     m_SceneName: LoadingScreen
-  scenetoLoad:
+  scenesToLoad:
   - m_SceneAsset: {fileID: 102900000, guid: f31f54b1c30cd034b82a617897267094, type: 3}
     m_SceneName: InnerStore
   - m_SceneAsset: {fileID: 102900000, guid: 8a10f5ff2b45d6a408b23c6aae927095, type: 3}
@@ -5060,7 +5060,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 427ba15372f1afb468674d80c9735079, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  apiUrl: http://localhost:5011/Quiz?id_curso=1
+  baseUrl: http://localhost:5011/Quiz
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
