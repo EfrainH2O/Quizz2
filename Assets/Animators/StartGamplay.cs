@@ -81,6 +81,7 @@ public class StartGameplay : MonoBehaviour
     private List<SceneField> scenesToLoad;
 
     private List<AsyncOperation> loadingProcesses;
+    private loadingGIF gif;
 
     void Awake()
     {
@@ -108,6 +109,13 @@ public class StartGameplay : MonoBehaviour
 
         yield return new WaitForSeconds(0.5f); // Esperar medio segundo (WebGL stability)
 
+        //carga gif
+        gif = Object.FindFirstObjectByType<loadingGIF>();
+        if (gif == null)
+        {
+            Debug.LogWarning("No se encontró loadingGIF en la escena. ¿Olvidaste instanciarlo?");
+        }
+
         // 2. Cargar todas las demás escenas como Additive
         foreach (SceneField scene in scenesToLoad)
         {
@@ -119,6 +127,12 @@ public class StartGameplay : MonoBehaviour
 
         // 3. Esperar para asegurarse
         yield return new WaitForSeconds(0.5f);
+
+        //eliminar gif hbdskjv bczh
+        if (gif != null)
+        {
+            gif.Hide(); // Esto inicia el desvanecimiento del GIF
+        }
 
         // Aquí es donde ponemos la verificación antes de activar
         if (scenesToLoad != null && scenesToLoad.Count > 0)
