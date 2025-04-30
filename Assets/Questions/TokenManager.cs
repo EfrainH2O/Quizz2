@@ -24,8 +24,8 @@ public class TokenManager : MonoBehaviour
         void Start()
     {
         // SOLO PARA PRUEBA: Forzar Token y CursoId
-        Token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjEwMDAiLCJyb2xlIjoiMCIsIm5iZiI6MTc0NTg5NTA3NCwiZXhwIjoxNzUxMjk1MDc0LCJpYXQiOjE3NDU4OTUwNzQsImlzcyI6IllvdXJJc3N1ZXIiLCJhdWQiOiJZb3VyQXVkaWVuY2UifQ.AVkkZX2XNIMQKScKqJAH0BaiecMARprLJEYZBhP__OA";
-        CursoId = 1;
+        Token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjEwMDAiLCJyb2xlIjoiMCIsIm5iZiI6MTc0NTk2NTY3NywiZXhwIjoxNzUxMzY1Njc3LCJpYXQiOjE3NDU5NjU2NzcsImlzcyI6IllvdXJJc3N1ZXIiLCJhdWQiOiJZb3VyQXVkaWVuY2UifQ.-RuQmFsYNGIE0RJRqkpCy0eEbbXoNc4HfsmVju3RZDw";
+        CursoId = 2;
 
         Debug.Log($"[TokenManager] Token de prueba asignado: {Token}");
         Debug.Log($"[TokenManager] CursoId de prueba asignado: {CursoId}");

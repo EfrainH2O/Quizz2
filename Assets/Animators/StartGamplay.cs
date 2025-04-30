@@ -77,6 +77,7 @@ public class StartGameplay : MonoBehaviour
 {
     [SerializeField]
     private SceneField loadingScene;
+    
     [SerializeField]
     private List<SceneField> scenesToLoad;
 
@@ -101,6 +102,8 @@ public class StartGameplay : MonoBehaviour
 
     private IEnumerator LoadEverything()
     {
+
+        
         // 1. Cargar loading scene
         AsyncOperation loading = SceneManager.LoadSceneAsync(loadingScene, LoadSceneMode.Single);
         yield return loading; // Esperar a que termine

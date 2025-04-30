@@ -8,7 +8,7 @@ public class APIQuestionManager : MonoBehaviour
     public static APIQuestionManager Instance { get; private set; }
 
     [Header("API Configuration")]
-    [SerializeField] private string baseUrl = "http://localhost:5011/Quiz"; // solo el dominio, pq el token y curso son dinamicos
+    [SerializeField] private string baseUrl = "http://130.213.216.127:5011/Quiz"; // solo el dominio, pq el token y curso son dinamicos
 
     private List<Question> internalQuestions = new List<Question>();
     public bool IsReady { get; private set; } = false;

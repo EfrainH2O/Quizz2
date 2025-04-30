@@ -8,7 +8,7 @@ public class PostQuizResult : MonoBehaviour
     public static PostQuizResult Instance { get; private set; }
 
     [SerializeField]
-    private string postUrl = "http://localhost:5011/QuizEstudiante/Quiz"; 
+    private string postUrl = "http://130.213.216.127:5011/QuizEstudiante/Quiz"; 
 
     void Awake()
     {

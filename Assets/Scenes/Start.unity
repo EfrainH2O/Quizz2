@@ -1865,6 +1865,9 @@ MonoBehaviour:
   loadingScene:
     m_SceneAsset: {fileID: 102900000, guid: 03c1e74f1d89dd7439513fb268426637, type: 3}
     m_SceneName: LoadingScreen
+  loadingUIScene:
+    m_SceneAsset: {fileID: 102900000, guid: d1ceabf6b44454418818f2e39567cac7, type: 3}
+    m_SceneName: LoadingUI
   scenesToLoad:
   - m_SceneAsset: {fileID: 102900000, guid: f31f54b1c30cd034b82a617897267094, type: 3}
     m_SceneName: InnerStore
